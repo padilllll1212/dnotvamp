@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HBD BU NEGARA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <style>
+      .fade-out {
+        animation: fadeOut 1s forwards;
+      }
+      .fade-in {
+        animation: fadeIn 1s forwards;
+      }
+      @keyframes fadeOut {
+        to {
+          opacity: 0;
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body
+    style="background-image: url(bb.jpg);"
+    class="flex justify-center h-screen items-center"
+  >
+    <!-- Audio Background -->
+    <audio id="musik" loop>
+      <source src="123.mp3" type="audio/mp3" />
+      Your browser does not support the audio element.
+    </audio>
+
+    <div
+      class="bg-white border px-10 py-8 border-4 border-gray-300 shadow-lg shadow-blue-300 rounded-xl text-center animate__animated animate__backInDown m-8 w-80"
+      id="kartu"
+    >
+      <h1 class="text-3xl">Happy Birthday</h1>
+      <h1
+        class="text-4xl text-blue-500 font-bold animate__animated animate__pulse animate__infinite"
+      >
+        Dinda Safitri
+      </h1>
+      <button
+        class="p-2 bg-blue-600 text-white rounded mt-5 hover:bg-blue-900 transition ease-in w-full animate__animated animate__delay-1s animate__tada"
+        onclick="mulaiSlideFoto()"
+      >
+        touch here by!
+      </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+    <script>
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+
+      const fotoKenangan = [
+        "1.jpg",
+        "2.jpg",
+        "3.jpg",
+      ]; 
+
+      const fotoGaleri = [
+        "9.jpg",
+        "2.jpg",
+        "6.jpg",
+        "8.jpg",
+        "11.jpg",
+        "12.jpg",
+      ]; 
+
+      let kartu = document.getElementById("kartu");
+      let indexFoto = 0;
+      let intervalTukarFoto;
+      let musik = document.getElementById("musik");
+
+      function mulaiSlideFoto() {
+        musik.play(); // <-- Mulai musik saat klik tombol
+        tampilkanFoto();
+      }
+
+      function tampilkanFoto() {
+        kartu.innerHTML = `
+          <div class="cursor-pointer">
+            <img id="foto" src="${fotoKenangan[indexFoto]}" alt="Kenangan" 
+              class="rounded-lg shadow-lg mx-auto mb-4 animate__animated animate__zoomIn w-72 h-72 object-cover" />
+            <div class="text-gray-500 text-sm animate__animated animate__fadeInDown mb-4">
+              klik lagi klo ga di klik kestop musiknyaTT
+            </div>
+            <div class="flex justify-between space-x-4">
+              <button onclick="fotoSebelumnya()" class="bg-slate-500 text-white px-4 py-2 rounded hover:bg-slate-700 transition">
+                ⬅️ back
+              </button>
+              <button onclick="fotoSelanjutnya()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">
+                next ➡️
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      function fotoSelanjutnya() {
+        indexFoto++;
+        if (indexFoto < fotoKenangan.length) {
+          tampilkanFoto();
+        } else {
+          tampilkanGaleri();
+        }
+      }
+
+      function fotoSebelumnya() {
+        if (indexFoto > 0) {
+          indexFoto--;
+          tampilkanFoto();
+        }
+      }
+
+      function tampilkanGaleri() {
+        kartu.classList.remove('w-80');
+        kartu.classList.add('w-full', 'max-w-4xl');
+
+        kartu.innerHTML = `
+          <h1 class="text-2xl font-bold mb-6 animate__animated animate__fadeInDown">
+            Our Memories Together 🥰
+          </h1>
+          <div id="galeri" class="grid grid-cols-2 md:grid-cols-3 gap-4 animate__animated animate__fadeIn">
+            ${fotoGaleri.map(url => `
+              <img src="${url}" alt="Kenangan" class="rounded-lg shadow-lg w-full h-48 object-cover transition-opacity duration-1000">
+            `).join('')}
+          </div>
+          <div id="ucapan" class="mt-6 text-lg font-semibold text-center"></div>
+
+          <button
+            class="p-2 bg-slate-600 text-white rounded mt-8 hover:bg-slate-900 transition ease-in w-full animate__animated animate__delay-1s animate__tada"
+            onclick="refresh()"
+          >
+            Tutup
+          </button>
+        `;
+
+        mulaiTukarFoto();
+        mulaiAnimasiUcapan();
+      }
+
+      function mulaiTukarFoto() {
+        const galeri = document.getElementById('galeri');
+        const fotoElements = galeri.getElementsByTagName('img');
+
+        intervalTukarFoto = setInterval(() => {
+          if (fotoElements.length < 2) return;
+          let i = Math.floor(Math.random() * fotoElements.length);
+          let j = Math.floor(Math.random() * fotoElements.length);
+          if (i === j) return;
+
+          fotoElements[i].classList.add('fade-out');
+          fotoElements[j].classList.add('fade-out');
+
+          setTimeout(() => {
+            let temp = fotoElements[i].src;
+            fotoElements[i].src = fotoElements[j].src;
+            fotoElements[j].src = temp;
+
+            fotoElements[i].classList.remove('fade-out');
+            fotoElements[i].classList.add('fade-in');
+
+            fotoElements[j].classList.remove('fade-out');
+            fotoElements[j].classList.add('fade-in');
+
+            setTimeout(() => {
+              fotoElements[i].classList.remove('fade-in');
+              fotoElements[j].classList.remove('fade-in');
+            }, 1000);
+
+          }, 1000);
+        }, 3000);
+      }
+
+      function mulaiAnimasiUcapan() {
+        const ucapanDiv = document.getElementById('ucapan');
+        const kalimat = [
+          "Selamat ulang tahun ke 22 by! 🎉",
+          "Semoga tahun ini makin banyak kebahagiaan,",
+          "Rezeki lancar, semua impian terkabul.",
+          "Semoga hubungan kita langgeng terus!",
+          "Walaupun banyak problem yang datang tiap hari,",
+          "walau sebagian besar problemnya itu dari mu si,",
+          "tetap ji kumaafkan semua kesalahanmu,",
+          "Semoga makin sering seru-seruan bareng, makin tahu lebih dalam tentang satu sama lain 🚀",
+          "Love u 404! 🎂🎈"
+        ];
+
+        let index = 0;
+
+        function tampilkanKalimat() {
+          if (index < kalimat.length) {
+            const p = document.createElement('p');
+            p.textContent = kalimat[index];
+            p.className = 'animate__animated animate__fadeIn mb-2';
+            ucapanDiv.appendChild(p);
+            index++;
+            setTimeout(tampilkanKalimat, 2000);
+          }
+        }
+
+        tampilkanKalimat();
+      }
+
+      function refresh() {
+        clearInterval(intervalTukarFoto);
+        musik.pause(); // Pause musik kalau klik Tutup
+        musik.currentTime = 0;
+        location.reload();
+      }
+    </script>
+  </body>
+</html>
